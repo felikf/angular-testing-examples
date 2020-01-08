@@ -1,7 +1,10 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, ComponentFixture, flush, tick } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -10,22 +13,31 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
   });
 
-  it(`should have as title 'angular-testing-examples'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('angular-testing-examples');
-  });
+  it('async - flush', fakeAsync(() => {
+    expect(component.value).toBeFalsy();
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('angular-testing-examples app is running!');
-  });
+    fixture.detectChanges(); // ngOnInit
+
+    expect(component.value).toBeFalsy();
+    flush();
+
+    expect(component.value).toBe('foo');
+  }));
+
+  it('async - tick', fakeAsync(() => {
+    expect(component.value).toBeFalsy();
+
+    fixture.detectChanges(); // ngOnInit
+
+    expect(component.value).toBeFalsy();
+    tick();
+
+    expect(component.value).toBe('foo');
+  }));
+
 });
