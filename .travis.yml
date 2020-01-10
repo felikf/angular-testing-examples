@@ -9,4 +9,4 @@ branches:
 before_script:
   - npm install -g @angular/cli
 script:
-  - ng test
+  - npm run test-headless
