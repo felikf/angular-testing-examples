@@ -1,4 +1,6 @@
 import { TestBed, async, fakeAsync, ComponentFixture, flush, tick } from '@angular/core/testing';
+import { EventEmitter } from '@angular/core';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -18,13 +20,13 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('async - flush', fakeAsync(() => {
+  xit('async - flush', fakeAsync(() => {
     expect(component.value).toBeFalsy();
 
     fixture.detectChanges(); // ngOnInit
 
     expect(component.value).toBeFalsy();
-    flush();
+    flush(); // flush does not flush recurring events
 
     expect(component.value).toBe('foo');
   }));
@@ -40,4 +42,12 @@ describe('AppComponent', () => {
     expect(component.value).toBe('foo');
   }));
 
+  it('should pass', done => {
+    const eventEmitter2 = new EventEmitter();
+    eventEmitter2.emit('B');
+    eventEmitter2.subscribe(v => {
+      expect(v).toBe('B');
+      done();
+    });
+  });
 });
